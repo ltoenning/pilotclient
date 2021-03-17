@@ -9,6 +9,8 @@
 #include "blackmisc/aviation/aircraftvelocity.h"
 #include "blackmisc/verify.h"
 
+#include <QStringBuilder>
+
 using namespace BlackMisc::PhysicalQuantities;
 
 namespace BlackMisc
@@ -73,9 +75,9 @@ namespace BlackMisc
 
         QString CAircraftVelocity::convertToQString(bool i18n) const
         {
-            //! \todo Implement CAircraftVelocity::convertToQString
-            Q_UNUSED(i18n);
-            return QStringLiteral("velocity{}");
+            return u"Velocity: " % QStringLiteral("%1 %2 %3 ").arg(m_x).arg(m_y).arg(m_z) % c_xyzUnit.convertToQString(i18n) %
+                   u" | Rotation: " % QStringLiteral("%1 %2 %3 ").arg(m_pitch).arg(m_roll).arg(m_heading) %
+                   c_pbhAngleUnit.convertToQString(i18n) % u"/" % c_pbhTimeUnit.convertToQString(i18n);
         }
 
         QVariant CAircraftVelocity::propertyByIndex(CPropertyIndexRef index) const
