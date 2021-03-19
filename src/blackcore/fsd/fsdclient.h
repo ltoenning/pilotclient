@@ -562,6 +562,7 @@ namespace BlackCore
             static int constexpr c_updateInterimPostionIntervalMsec = 1000; //!< interval for iterim position updates (send our position as interim position)
             static int constexpr c_updateVisualPositionIntervalMsec = 200;  //!< interval for the VATSIM visual position updates (send our position and 6DOF velocity)
             static int constexpr c_sendFsdMsgIntervalMsec           = 10;   //!< interval for FSD send messages
+            bool m_stoppedSendingVisualPositions = false; //!< for when velocity drops to zero
         };
     } // ns
 } // ns

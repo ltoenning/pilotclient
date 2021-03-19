@@ -388,6 +388,23 @@ namespace BlackCore
             if (this->getConnectionStatus().isDisconnected() && ! m_unitTestMode) { return; }
             if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer()) { return; }
             const CSimulatedAircraft myAircraft(getOwnAircraft());
+
+            static constexpr double minVelocity = 0.00005;
+            if (std::abs(myAircraft.getVelocity().getVelocityX(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getVelocityY(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getVelocityZ(CSpeedUnit::m_s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
+                std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
+            {
+                if (m_stoppedSendingVisualPositions) { return; }
+                m_stoppedSendingVisualPositions = true;
+            }
+            else
+            {
+                m_stoppedSendingVisualPositions = false;
+            }
+
             VisualPilotDataUpdate visualPilotDataUpdate(getOwnCallsignAsString(),
                     myAircraft.latitude().value(CAngleUnit::deg()),
                     myAircraft.longitude().value(CAngleUnit::deg()),
