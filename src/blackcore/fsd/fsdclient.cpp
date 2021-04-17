@@ -375,7 +375,7 @@ namespace BlackCore
                     myAircraft.getHeading().normalizedTo360Degrees().value(CAngleUnit::deg()),
                     myAircraft.getParts().isOnGround());
 
-            for (const auto &receiver : as_const(m_interimPositionReceivers))
+            for (const auto &receiver : std::as_const(m_interimPositionReceivers))
             {
                 interimPilotDataUpdate.setReceiver(receiver.asString());
                 sendQueudedMessage(interimPilotDataUpdate);
@@ -1850,7 +1850,7 @@ namespace BlackCore
             {
                 emit atisLogoffTimeReplyReceived(sender, message);
                 CInformationMessage atisMessage(CInformationMessage::ATIS);
-                for (const auto &line : as_const(pendingQuery.m_atisMessage))
+                for (const auto &line : std::as_const(pendingQuery.m_atisMessage))
                 {
                     if (!atisMessage.isEmpty()) atisMessage.appendMessage("\n");
                     atisMessage.appendMessage(line);
@@ -1947,7 +1947,7 @@ namespace BlackCore
             }
 
             if (callStatistics.isEmpty()) { return QString(); }
-            for (const auto [key, value] : makePairsRange(as_const(callStatistics)))
+            for (const auto [key, value] : makePairsRange(std::as_const(callStatistics)))
             {
                 // key is pair.first, value is pair.second
                 transformed.push_back({ value, key });
@@ -2051,7 +2051,7 @@ namespace BlackCore
             if (m_printToConsole) { qDebug() << "FSD Recv=>" << line; }
             emitRawFsdMessage(line, false);
 
-            for (const QString &str : makeKeysRange(as_const(m_messageTypeMapping)))
+            for (const QString &str : makeKeysRange(std::as_const(m_messageTypeMapping)))
             {
                 if (line.startsWith(str))
                 {

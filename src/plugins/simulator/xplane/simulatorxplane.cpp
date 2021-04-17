@@ -723,13 +723,13 @@ namespace BlackSimPlugin
             // comment KB 2019-06
             // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
             QSet<QString> superpackages;
-            for (const Prefix &package : as_const(packages))
+            for (const Prefix &package : std::as_const(packages))
             {
                 superpackages.insert(package.parent());
             }
 
             const QDir simDir = getSimulatorSettings().getSimulatorDirectoryOrDefault();
-            for (const QString &package : as_const(superpackages))
+            for (const QString &package : std::as_const(superpackages))
             {
                 if (CDirectoryUtils::isSameOrSubDirectoryOf(package, simDir))
                 {
@@ -950,7 +950,7 @@ namespace BlackSimPlugin
             cloudLayers.sortBy(&CCloudLayer::getBase);
             // todo: Instead of truncate, find the 3 vertical closest cloud layers
             cloudLayers.truncate(3);
-            for (const auto &cloudLayer : as_const(cloudLayers))
+            for (const auto &cloudLayer : std::as_const(cloudLayers))
             {
                 const int base = cloudLayer.getBase().valueInteger(CLengthUnit::m());
                 const int top = cloudLayer.getTop().valueInteger(CLengthUnit::m());
@@ -1387,7 +1387,7 @@ namespace BlackSimPlugin
                 timeoutCallsigns.push_back(cs);
             }
 
-            for (const CCallsign &cs : as_const(timeoutCallsigns))
+            for (const CCallsign &cs : std::as_const(timeoutCallsigns))
             {
                 m_addingInProgressAircraft.remove(cs);
                 CLogMessage(this).warning(u"Adding for '%1' timed out") << cs.asString();
