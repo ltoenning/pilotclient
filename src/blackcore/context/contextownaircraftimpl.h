@@ -177,7 +177,7 @@ namespace BlackCore
             virtual bool setTransponderMode(BlackMisc::Aviation::CTransponder::TransponderMode mode) override;
 
             //! \copydoc IContextOwnAircraft::setAudioOutputVolume
-            virtual void setAudioOutputVolume(int outputVolume) override;
+            //virtual void setAudioOutputVolume(int outputVolume) override;
 
             //! \addtogroup swiftdotcommands
             //! @{

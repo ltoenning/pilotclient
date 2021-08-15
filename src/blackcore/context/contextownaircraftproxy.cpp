@@ -132,10 +132,10 @@ namespace BlackCore
             return m_dBusInterface->callDBusRet<bool>(QLatin1String("updateOwnIcaoCodes"), aircraftIcaoCode, airlineIcaoCode);
         }
 
-        void CContextOwnAircraftProxy::setAudioOutputVolume(int outputVolume)
-        {
-            m_dBusInterface->callDBus(QLatin1String("setAudioOutputVolume"), outputVolume);
-        }
+        // void CContextOwnAircraftProxy::setAudioOutputVolume(int outputVolume)
+        // {
+        //     m_dBusInterface->callDBus(QLatin1String("setAudioOutputVolume"), outputVolume);
+        // }
 
         void CContextOwnAircraftProxy::toggleTransponderMode()
         {

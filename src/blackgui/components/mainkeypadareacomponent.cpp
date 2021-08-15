@@ -143,7 +143,7 @@ namespace BlackGui
             }
             else if (senderButton == ui->pb_SoundMaxVolume && sGui->getIContextAudio())
             {
-                sGui->getCContextAudioBase()->setVoiceOutputVolume(100);
+                //sGui->getCContextAudioBase()->setVoiceOutputVolume(100); // FIXME
             }
             else if (senderButton == ui->pb_SoundMute && sGui->getIContextAudio())
             {

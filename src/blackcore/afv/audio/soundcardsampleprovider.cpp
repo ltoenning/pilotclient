@@ -187,6 +187,17 @@ namespace BlackCore
                 return m_receiverInputs.at(transceiverID)->getReceivingCallsignsString();
             }
 
+            void CSoundcardSampleProvider::setGainRatioForTranseiver(quint16 transceiverID, double gainRatio)
+            {
+                auto receiverInput = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(),
+                [&](const auto receiver)
+                {
+                    return receiver->getId() == transceiverID;
+                });
+                if (receiverInput == m_receiverInputs.end()) { return; }
+                (*receiverInput)->setGainRatio(gainRatio);
+            }
+
             BlackMisc::Aviation::CCallsignSet CSoundcardSampleProvider::getReceivingCallsigns(quint16 transceiverID) const
             {
                 return m_receiverInputs.at(transceiverID)->getReceivingCallsigns();

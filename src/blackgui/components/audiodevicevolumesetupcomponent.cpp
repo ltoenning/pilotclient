@@ -48,11 +48,13 @@ namespace BlackGui
         {
             ui->setupUi(this);
             connect(ui->hs_VolumeIn,         &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
-            connect(ui->hs_VolumeOut,        &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->hs_VolumeOutCom1,        &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
+            connect(ui->hs_VolumeOutCom2,        &QSlider::valueChanged, this, &CAudioDeviceVolumeSetupComponent::onVolumeSliderChanged);
             connect(ui->tb_RefreshInDevice,  &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices,  Qt::QueuedConnection);
             connect(ui->tb_RefreshOutDevice, &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onReloadDevices,  Qt::QueuedConnection);
             connect(ui->tb_ResetInVolume,    &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeIn,  Qt::QueuedConnection);
-            connect(ui->tb_ResetOutVolume,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOut, Qt::QueuedConnection);
+            connect(ui->tb_ResetOutVolumeCom1,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom1, Qt::QueuedConnection);
+            connect(ui->tb_ResetOutVolumeCom2,   &QToolButton::released, this, &CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom2, Qt::QueuedConnection);
 
             connect(ui->cb_1Tx,  &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
             connect(ui->cb_2Tx,  &QCheckBox::toggled, this, &CAudioDeviceVolumeSetupComponent::onRxTxChanged, Qt::QueuedConnection);
@@ -62,14 +64,18 @@ namespace BlackGui
 
             ui->hs_VolumeIn->setMaximum(CSettings::InMax);
             ui->hs_VolumeIn->setMinimum(CSettings::InMin);
-            ui->hs_VolumeOut->setMaximum(CSettings::OutMax);
-            ui->hs_VolumeOut->setMinimum(CSettings::OutMin);
+            ui->hs_VolumeOutCom1->setMaximum(CSettings::OutMax);
+            ui->hs_VolumeOutCom1->setMinimum(CSettings::OutMin);
+            ui->hs_VolumeOutCom2->setMaximum(CSettings::OutMax);
+            ui->hs_VolumeOutCom2->setMinimum(CSettings::OutMin);
 
             const CSettings as(m_audioSettings.getThreadLocal());
             const int i = this->getInValue();
-            const int o = this->getOutValue();
+            const int o1 = this->getOutValueCom1();
+            const int o2 = this->getOutValueCom2();
             ui->hs_VolumeIn->setValue(i);
-            ui->hs_VolumeOut->setValue(o);
+            ui->hs_VolumeOutCom1->setValue(o1);
+            ui->hs_VolumeOutCom2->setValue(o2);
             ui->cb_SetupAudioLoopback->setChecked(false);
             ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
 
@@ -183,11 +189,18 @@ namespace BlackGui
             return qRound(ui->hs_VolumeIn->value() / r * tr);
         }
 
-        int CAudioDeviceVolumeSetupComponent::getOutValue(int from, int to) const
+        int CAudioDeviceVolumeSetupComponent::getOutValueCom1(int from, int to) const
         {
-            const double r  = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
+            const double r  = ui->hs_VolumeOutCom1->maximum() - ui->hs_VolumeOutCom1->minimum();
             const double tr = to - from;
-            return qRound(ui->hs_VolumeOut->value() / r * tr);
+            return qRound(ui->hs_VolumeOutCom1->value() / r * tr);
+        }
+
+        int CAudioDeviceVolumeSetupComponent::getOutValueCom2(int from, int to) const
+        {
+            const double r  = ui->hs_VolumeOutCom2->maximum() - ui->hs_VolumeOutCom2->minimum();
+            const double tr = to - from;
+            return qRound(ui->hs_VolumeOutCom2->value() / r * tr);
         }
 
         void CAudioDeviceVolumeSetupComponent::setInValue(int value, int from, int to)
@@ -199,13 +212,22 @@ namespace BlackGui
             ui->hs_VolumeIn->setValue(qRound(value / tr * r));
         }
 
-        void CAudioDeviceVolumeSetupComponent::setOutValue(int value, int from, int to)
+        void CAudioDeviceVolumeSetupComponent::setOutValueCom1(int value, int from, int to)
         {
             if (value > to) { value = to; }
             else if (value < from) { value = from; }
-            const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
+            const double r = ui->hs_VolumeOutCom1->maximum() - ui->hs_VolumeOutCom1->minimum();
             const double tr = to - from;
-            ui->hs_VolumeOut->setValue(qRound(value / tr * r));
+            ui->hs_VolumeOutCom1->setValue(qRound(value / tr * r));
+        }
+
+        void CAudioDeviceVolumeSetupComponent::setOutValueCom2(int value, int from, int to)
+        {
+            if (value > to) { value = to; }
+            else if (value < from) { value = from; }
+            const double r = ui->hs_VolumeOutCom2->maximum() - ui->hs_VolumeOutCom2->minimum();
+            const double tr = to - from;
+            ui->hs_VolumeOutCom2->setValue(qRound(value / tr * r));
         }
 
         void CAudioDeviceVolumeSetupComponent::setInLevel(double value)
@@ -215,11 +237,11 @@ namespace BlackGui
             ui->wip_InLevelMeter->levelChanged(value);
         }
 
-        void CAudioDeviceVolumeSetupComponent::setOutLevel(double value)
+        void CAudioDeviceVolumeSetupComponent::setOutLevel(double value) // FIXME
         {
             if (value > 1.0) { value = 1.0; }
             else if (value < 0.0) { value = 0.0; }
-            ui->wip_OutLevelMeter->levelChanged(value);
+            ui->wip_OutLevelMeterCom1->levelChanged(value);
         }
 
         void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
@@ -252,12 +274,17 @@ namespace BlackGui
             const bool com1Tx = com1Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com1);
             const bool com2Tx = com2Enabled && sGui->getCContextAudioBase()->isTransmittingComUnit(CComSystem::Com2);
 
+            const int vol1 = sGui->getCContextAudioBase()->getVoiceOutputVolume(CComSystem::Com1);
+            const int vol2 = sGui->getCContextAudioBase()->getVoiceOutputVolume(CComSystem::Com2);
+
             // we do not have receiving, so we use enable
             const bool com1Rx = com1Enabled;
             const bool com2Rx = com2Enabled;
 
             const bool integrated = this->isComIntegrated();
             this->setTransmitReceiveInUi(com1Tx, com1Rx, com2Tx, com2Rx, integrated);
+            ui->hs_VolumeOutCom1->setValue(vol1); // TODO: Move to own function
+            ui->hs_VolumeOutCom2->setValue(vol2);
         }
 
         void CAudioDeviceVolumeSetupComponent::setCheckBoxesReadOnly(bool readonly)
@@ -280,7 +307,8 @@ namespace BlackGui
             const CSettings as(m_audioSettings.getThreadLocal());
             ui->cb_DisableAudioEffects->setChecked(!as.isAudioEffectsEnabled());
             this->setInValue(as.getInVolume());
-            this->setOutValue(as.getOutVolume());
+            this->setOutValueCom1(as.getOutVolumeCom1());
+            this->setOutValueCom2(as.getOutVolumeCom2());
         }
 
         void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
@@ -312,10 +340,12 @@ namespace BlackGui
         {
             CSettings as(m_audioSettings.getThreadLocal());
             const int i = this->getInValue();
-            const int o = this->getOutValue();
-            if (as.getInVolume() == i && as.getOutVolume() == o) { return; }
+            const int o1 = this->getOutValueCom1();
+            const int o2 = this->getOutValueCom2();
+            if (as.getInVolume() == i && as.getOutVolumeCom1() == o1 && as.getOutVolumeCom2() == o2) { return; }
             as.setInVolume(i);
-            as.setOutVolume(o);
+            as.setOutVolumeCom1(o1);
+            as.setOutVolumeCom2(o2);
             m_audioSettings.setAndSave(as);
         }
 
@@ -343,9 +373,14 @@ namespace BlackGui
             ui->hs_VolumeIn->setValue((ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum()) / 2);
         }
 
-        void CAudioDeviceVolumeSetupComponent::onResetVolumeOut()
+        void CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom1()
         {
-            ui->hs_VolumeOut->setValue((ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum()) / 2);
+            ui->hs_VolumeOutCom1->setValue((ui->hs_VolumeOutCom1->maximum() - ui->hs_VolumeOutCom1->minimum()) / 2);
+        }
+
+        void CAudioDeviceVolumeSetupComponent::onResetVolumeOutCom2()
+        {
+            ui->hs_VolumeOutCom2->setValue((ui->hs_VolumeOutCom2->maximum() - ui->hs_VolumeOutCom2->minimum()) / 2);
         }
 
         void CAudioDeviceVolumeSetupComponent::setAudioRunsWhere()
