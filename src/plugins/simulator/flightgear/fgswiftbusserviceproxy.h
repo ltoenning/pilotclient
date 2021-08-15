@@ -214,6 +214,18 @@ namespace BlackSimPlugin
             void getCom1StandbyKhzAsync(int *o_com1Standby);
             //! @}
 
+            //! Get Com1 volume [0..1]
+            //! @{
+            double getCom1Volume() const;
+            void getCom1VolumeAsync(double *o_com1Volume);
+            //! @}
+
+            //! Get Com2 volume [0..1]
+            //! @{
+            double getCom2Volume() const;
+            void getCom2VolumeAsync(double *o_com1Volume);
+            //! @}
+
             //! Get the current COM2 active frequency in kHz
             //! @{
             int getCom2ActiveKhz() const;

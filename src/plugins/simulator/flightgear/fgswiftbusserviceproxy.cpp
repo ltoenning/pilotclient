@@ -242,6 +242,25 @@ namespace BlackSimPlugin
             m_dbusInterface->callDBusAsync(QLatin1String("getCom2ActiveKhz"), setterCallback(o_com2Active));
         }
 
+        double CFGSwiftBusServiceProxy::getCom1Volume() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getCom1Volume"));
+        }
+        void CFGSwiftBusServiceProxy::getCom1VolumeAsync(double *o_com1Volume)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom1Volume"), setterCallback(o_com1Volume));
+        }
+
+        double CFGSwiftBusServiceProxy::getCom2Volume() const
+        {
+            return m_dbusInterface->callDBusRet<double>(QLatin1String("getCom2Volume"));
+        }
+        void CFGSwiftBusServiceProxy::getCom2VolumeAsync(double *o_com2Volume)
+        {
+            m_dbusInterface->callDBusAsync(QLatin1String("getCom2Volume"), setterCallback(o_com2Volume));
+        }
+
+
         int CFGSwiftBusServiceProxy::getCom2StandbyKhz() const
         {
             return m_dbusInterface->callDBusRet<int>(QLatin1String("getCom2StandbyKhz"));
