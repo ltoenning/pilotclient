@@ -237,11 +237,11 @@ namespace BlackGui
             ui->wip_InLevelMeter->levelChanged(value);
         }
 
-        void CAudioDeviceVolumeSetupComponent::setOutLevel(double value) // FIXME
+        void CAudioDeviceVolumeSetupComponent::setOutLevel(double value)
         {
             if (value > 1.0) { value = 1.0; }
             else if (value < 0.0) { value = 0.0; }
-            ui->wip_OutLevelMeterCom1->levelChanged(value);
+            ui->wip_OutLevelMeter->levelChanged(value);
         }
 
         void CAudioDeviceVolumeSetupComponent::setInfo(const QString &info)
